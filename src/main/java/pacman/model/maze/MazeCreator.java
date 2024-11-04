@@ -4,39 +4,38 @@ import pacman.model.entity.Renderable;
 import pacman.model.entity.dynamic.physics.Vector2D;
 import pacman.model.factories.RenderableFactoryRegistry;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
-import static java.lang.System.exit;
-
-/**
- * Responsible for creating renderables and storing it in the Maze
- */
 public class MazeCreator {
 
     public static final int RESIZING_FACTOR = 16;
-    private final String fileName;
+    private final String mapPath;
     private final RenderableFactoryRegistry renderableFactoryRegistry;
 
-    public MazeCreator(String fileName,
+    public MazeCreator(String mapPath,
                        RenderableFactoryRegistry renderableFactoryRegistry) {
-        this.fileName = fileName;
+        this.mapPath = mapPath;
         this.renderableFactoryRegistry = renderableFactoryRegistry;
     }
 
     public Maze createMaze() {
-        File f = new File(this.fileName);
         Maze maze = new Maze();
 
         try {
-            Scanner scanner = new Scanner(f);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                            Objects.requireNonNull(
+                                    getClass().getResourceAsStream(mapPath),
+                                    "Map file not found: " + mapPath
+                            )
+                    )
+            );
 
             int y = 0;
-
-            while (scanner.hasNextLine()) {
-
-                String line = scanner.nextLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
                 char[] row = line.toCharArray();
 
                 for (int x = 0; x < row.length; x++) {
@@ -53,10 +52,10 @@ public class MazeCreator {
                 y += 1;
             }
 
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("No maze file was found.");
-            exit(0);
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("Error reading maze file: " + e.getMessage());
+            System.exit(0);
         }
 
         return maze;

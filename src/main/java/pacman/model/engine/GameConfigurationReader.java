@@ -5,13 +5,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.Objects;
 
-/**
- * Helper class to read Game Configuration from JSONObject
- */
 public class GameConfigurationReader {
 
     private JSONObject gameConfig;
@@ -20,42 +18,34 @@ public class GameConfigurationReader {
         JSONParser parser = new JSONParser();
 
         try {
-            this.gameConfig = (JSONObject) parser.parse(new FileReader(configPath));
-        } catch (FileNotFoundException e) {
-            System.out.println("Config file not found");
-            System.exit(0);
-        } catch (IOException e) {
-            System.out.println("Error reading config file");
-            System.exit(0);
-        } catch (ParseException e) {
-            System.out.println("Error parsing config file");
+            // Get resource as stream
+            InputStream inputStream = Objects.requireNonNull(
+                    getClass().getResourceAsStream(configPath),
+                    "Config file not found: " + configPath
+            );
+
+            // Parse the config
+            try (Reader reader = new InputStreamReader(inputStream)) {
+                this.gameConfig = (JSONObject) parser.parse(reader);
+            }
+        } catch (Exception e) {
+            System.out.println("Error reading/parsing config file: " + e.getMessage());
             System.exit(0);
         }
     }
 
-    /**
-     * Gets the path of map file
-     *
-     * @return path of map file
-     */
     public String getMapFile() {
-        return (String) gameConfig.get("map");
+        String mapPath = (String) gameConfig.get("map");
+        if (!mapPath.startsWith("/")) {
+            mapPath = "/" + mapPath;
+        }
+        return mapPath;
     }
 
-    /**
-     * Gets the number of lives of player
-     *
-     * @return number of lives of player
-     */
     public int getNumLives() {
         return ((Number) gameConfig.get("numLives")).intValue();
     }
 
-    /**
-     * Gets JSONArray of level configurations
-     *
-     * @return JSONArray of level configurations
-     */
     public JSONArray getLevelConfigs() {
         return (JSONArray) gameConfig.get("levels");
     }

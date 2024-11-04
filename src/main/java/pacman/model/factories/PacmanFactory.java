@@ -9,21 +9,17 @@ import pacman.model.entity.dynamic.player.PacmanVisual;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-/**
- * Concrete renderable factory for Pac-Man objects
- */
 public class PacmanFactory implements RenderableFactory {
-    private static final Image playerLeftImage = new Image("maze/pacman/playerLeft.png");
-    private static final Image playerRightImage = new Image("maze/pacman/playerRight.png");
-    private static final Image playerUpImage = new Image("maze/pacman/playerUp.png");
-    private static final Image playerDownImage = new Image("maze/pacman/playerDown.png");
-    private static final Image playerClosedImage = new Image("maze/pacman/playerClosed.png");
+    private static final Image playerLeftImage = new Image(Objects.requireNonNull(PacmanFactory.class.getResourceAsStream("/maze/pacman/playerLeft.png")));
+    private static final Image playerRightImage = new Image(Objects.requireNonNull(PacmanFactory.class.getResourceAsStream("/maze/pacman/playerRight.png")));
+    private static final Image playerUpImage = new Image(Objects.requireNonNull(PacmanFactory.class.getResourceAsStream("/maze/pacman/playerUp.png")));
+    private static final Image playerDownImage = new Image(Objects.requireNonNull(PacmanFactory.class.getResourceAsStream("/maze/pacman/playerDown.png")));
+    private static final Image playerClosedImage = new Image(Objects.requireNonNull(PacmanFactory.class.getResourceAsStream("/maze/pacman/playerClosed.png")));
 
     @Override
-    public Renderable createRenderable(
-            Vector2D position
-    ) {
+    public Renderable createRenderable(Vector2D position) {
         try {
             Map<PacmanVisual, Image> images = new HashMap<>();
             images.put(PacmanVisual.UP, playerUpImage);

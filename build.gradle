@@ -2,30 +2,88 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '2.26.0'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group = 'pacman'
+version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
-javafx {
-    version = "17.0.2"
-    modules = ['javafx.controls','javafx.media']
-}
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-}
-
-test {
-    useJUnitPlatform()
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 application {
     mainClass = 'pacman.App'
+    mainModule = 'pacman.game'
+}
+
+javafx {
+    version = '17.0.2'
+    modules = ['javafx.controls', 'javafx.graphics']
+}
+
+dependencies {
+    implementation('com.googlecode.json-simple:json-simple:1.1.1') {
+        exclude group: 'junit', module: 'junit'
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'Pacman'
+        noConsole = true
+        jvmArgs = [
+                '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+                '--add-opens', 'java.base/java.io=ALL-UNNAMED',
+                '-Djavafx.animation.fullspeed=true',
+                '-Dfile.encoding=UTF-8'
+        ]
+    }
+
+    forceMerge('json-simple')
+    addOptions('--verbose')
+
+    jpackage {
+        appVersion = '1.0.0'
+        outputDir = "installers"
+        imageName = "Pacman"
+        skipInstaller = false
+
+        installerName = 'Pacman'
+        installerType = 'exe'
+
+        resourceDir = file("src/main/resources")
+
+        installerOptions = [
+                '--win-menu',
+                '--win-dir-chooser',
+                '--win-shortcut',
+                '--win-per-user-install',
+                '--win-menu-group', 'Pacman',
+                '--description', 'Pacman Game',
+                '--verbose'
+        ]
+    }
+}
+
+tasks.named('jpackage').configure {
+    doFirst {
+        copy {
+            from 'src/main/resources'
+            into 'build/jpackage/Pacman/app'
+            include '**/*'
+        }
+    }
 }
