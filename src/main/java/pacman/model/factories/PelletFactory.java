@@ -8,20 +8,19 @@ import pacman.model.entity.dynamic.physics.BoundingBoxImpl;
 import pacman.model.entity.dynamic.physics.Vector2D;
 import pacman.model.entity.staticentity.collectable.Pellet;
 
+import java.util.Objects;
+
 /**
  * Concrete renderable factory for Pellet objects
  */
 public class PelletFactory implements RenderableFactory {
-    private static final Image PELLET_IMAGE = new Image("maze/pellet.png");
+    private static final Image PELLET_IMAGE = new Image(Objects.requireNonNull(PelletFactory.class.getResourceAsStream("/maze/pellet.png")));
     private static final int NUM_POINTS = 10;
     private final Renderable.Layer layer = Renderable.Layer.BACKGROUND;
 
     @Override
-    public Renderable createRenderable(
-            Vector2D position
-    ) {
+    public Renderable createRenderable(Vector2D position) {
         try {
-
             BoundingBox boundingBox = new BoundingBoxImpl(
                     position,
                     PELLET_IMAGE.getHeight(),
@@ -34,7 +33,6 @@ public class PelletFactory implements RenderableFactory {
                     PELLET_IMAGE,
                     NUM_POINTS
             );
-
         } catch (Exception e) {
             throw new ConfigurationParseException(
                     String.format("Invalid pellet configuration | %s", e));

@@ -5,12 +5,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+import java.util.Objects;
+
 /**
  * Displays the number of lives of player
  */
 public class NumLivesDisplay implements Display {
 
-    private static final Image IMAGE = new Image("maze/pacman/playerRight.png");
+    private static final Image IMAGE = new Image(Objects.requireNonNull(
+            NumLivesDisplay.class.getResourceAsStream("/maze/pacman/playerRight.png")
+    ));
     private final HBox node;
 
     public NumLivesDisplay() {

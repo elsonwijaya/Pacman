@@ -7,10 +7,10 @@ import pacman.model.engine.observer.GameStateObserver;
 import pacman.model.level.observer.LevelStateObserver;
 import pacman.view.GameWindow;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Manages the display nodes for Pac-Man
@@ -22,11 +22,19 @@ public class DisplayManager implements LevelStateObserver, GameStateObserver {
     private final NumLivesDisplay numLivesDisplay;
 
     public DisplayManager() {
-
         Font font;
         try {
-            font = Font.loadFont(new FileInputStream(GameWindow.FONT_FILE), 16);
-        } catch (FileNotFoundException e) {
+            InputStream fontStream = Objects.requireNonNull(
+                    DisplayManager.class.getResourceAsStream("/maze/PressStart2P-Regular.ttf"),
+                    "Font file not found"
+            );
+            font = Font.loadFont(fontStream, 16);
+            if (font == null) {
+                System.out.println("Warning: Failed to load custom font, falling back to default");
+                font = new Font(16);
+            }
+        } catch (Exception e) {
+            System.out.println("Warning: Failed to load custom font: " + e.getMessage());
             font = new Font(16);
         }
 

@@ -44,7 +44,7 @@ public class GhostImpl implements Ghost {
     private final ChaseStrategy chaseStrategy;
 
     //PowerPellet Decorator
-    private static final Image FRIGHTENED_IMAGE = new Image("maze/ghosts/frightened.png");
+    private static final Image FRIGHTENED_IMAGE = new Image(Objects.requireNonNull(GhostImpl.class.getResourceAsStream("/maze/ghosts/frightened.png")));
     private static final int RESPAWN_DELAY = 30; //same with fps
     private int respawnTime = 0;
     private boolean isRespawning = false;

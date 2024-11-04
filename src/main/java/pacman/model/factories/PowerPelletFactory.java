@@ -9,11 +9,10 @@ import pacman.model.entity.dynamic.physics.Vector2D;
 import pacman.model.entity.staticentity.collectable.Pellet;
 import pacman.model.entity.staticentity.collectable.PowerPellet;
 
-/**
- * Concrete renderable factory for Pellet objects
- */
+import java.util.Objects;
+
 public class PowerPelletFactory implements RenderableFactory {
-    private static final Image PELLET_IMAGE = new Image("maze/pellet.png");
+    private static final Image PELLET_IMAGE = new Image(Objects.requireNonNull(PowerPelletFactory.class.getResourceAsStream("/maze/pellet.png")));
     private static final int NUM_POINTS = 50;
     private static final double SIZE_MULTIPLIER = 2.0;
     private final Renderable.Layer layer = Renderable.Layer.BACKGROUND;
@@ -38,7 +37,6 @@ public class PowerPelletFactory implements RenderableFactory {
                     PELLET_IMAGE,
                     NUM_POINTS
             );
-
         } catch (Exception e) {
             throw new ConfigurationParseException(
                     String.format("Invalid power pellet configuration | %s", e));

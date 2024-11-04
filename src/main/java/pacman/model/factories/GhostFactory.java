@@ -11,20 +11,18 @@ import pacman.model.entity.dynamic.physics.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * Concrete renderable factory for Ghost objects
- */
 public class GhostFactory implements RenderableFactory {
 
     private static final int RIGHT_X_POSITION_OF_MAP = 448;
     private static final int TOP_Y_POSITION_OF_MAP = 16 * 3;
     private static final int BOTTOM_Y_POSITION_OF_MAP = 16 * 34;
 
-    private static final Image BLINKY_IMAGE = new Image("maze/ghosts/blinky.png");
-    private static final Image INKY_IMAGE = new Image("maze/ghosts/inky.png");
-    private static final Image CLYDE_IMAGE = new Image("maze/ghosts/clyde.png");
-    private static final Image PINKY_IMAGE = new Image("maze/ghosts/pinky.png");
+    private static final Image BLINKY_IMAGE = new Image(Objects.requireNonNull(GhostFactory.class.getResourceAsStream("/maze/ghosts/blinky.png")));
+    private static final Image INKY_IMAGE = new Image(Objects.requireNonNull(GhostFactory.class.getResourceAsStream("/maze/ghosts/inky.png")));
+    private static final Image CLYDE_IMAGE = new Image(Objects.requireNonNull(GhostFactory.class.getResourceAsStream("/maze/ghosts/clyde.png")));
+    private static final Image PINKY_IMAGE = new Image(Objects.requireNonNull(GhostFactory.class.getResourceAsStream("/maze/ghosts/pinky.png")));
 
     private final char ghostType;
 
